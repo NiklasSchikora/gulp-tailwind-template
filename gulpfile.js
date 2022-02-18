@@ -17,7 +17,7 @@ const del = require("del"); //For Cleaning build/dist for fresh export
 const options = require("./config"); //paths and other options from config.js
 const browserSync = require("browser-sync").create();
 
-const sass = require("gulp-sass"); //For Compiling SASS files
+const sass = require("gulp-sass")(require("sass")); //For Compiling SASS files
 const postcss = require("gulp-postcss"); //For Compiling tailwind utilities with tailwind config
 const concat = require("gulp-concat"); //For Concatinating js,css files
 const uglify = require("gulp-terser"); //To Minify JS files
@@ -63,7 +63,7 @@ function devHTML() {
 
 function devStyles() {
   const tailwindcss = require("tailwindcss");
-  return src(`${options.paths.src.css}/**/*.scss`)
+  return src(`${options.paths.src.scss}/*.scss`)
     .pipe(sass().on("error", sass.logError))
     .pipe(dest(options.paths.src.css))
     .pipe(
@@ -95,7 +95,7 @@ function watchFiles() {
     series(devHTML, devStyles, previewReload)
   );
   watch(
-    [options.config.tailwindjs, `${options.paths.src.css}/**/*.scss`],
+    [options.config.tailwindjs, `${options.paths.src.scss}/**/*.scss`],
     series(devStyles, previewReload)
   );
   watch(`${options.paths.src.js}/**/*.js`, series(devScripts, previewReload));
